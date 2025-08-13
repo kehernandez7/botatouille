@@ -17,7 +17,6 @@ bot = commands.Bot(
 client = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
 bot.author_id = os.getenv("BOT_AUTHOR_ID")
-openai.api_key = os.getenv("OPENAI_API_KEY")
 food_data_api_key = os.getenv("FOOD_DATA_API_KEY")
 
 
