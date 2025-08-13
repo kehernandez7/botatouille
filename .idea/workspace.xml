@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c79213c8-9a83-4d90-9e35-d2bd9ed8da75" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="FormatOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="OptimizeOnSaveOptions">
+    <option name="myRunOnSave" value="true" />
+  </component>
+  <component name="ProjectId" id="282kkcTA7w1aLPt6mY1kiHDV9Li" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Python" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="PyConsoleOptionsProvider">
+    <option name="myPythonConsoleState">
+      <console-settings module-name="$DB_NAME$" is-module-sdk="true">
+        <option name="myUseModuleSdk" value="true" />
+        <option name="myModuleName" value="$DB_NAME$" />
+      </console-settings>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="$DB_NAME$" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+        <env name="DISCORD_BOT_SECRET" value="OTYzNjU0MDEyMTM2MjAyMjcw.GZ87ci.cIlhjgouRNqIEi2HjjP00Gz-5xjbbXZaV5FMeI" />
+        <env name="FOOD_DATA_API_KEY" value="$FOOD_DATA_API_KEY$" />
+        <env name="OPENAI_API_KEY" value="$OPEN_AI_API_KEY$" />
+        <env name="ATLAS_URI" value="mongodb+srv://botty:Ploppy1029@botatouille.q5wgz.mongodb.net/?retryWrites=true&amp;w=majority" />
+        <env name="DB_NAME" value="$DB_NAME$" />
+        <env name="GOOG" value="{   &quot;type&quot;: &quot;service_account&quot;,   &quot;project_id&quot;: &quot;botatouille-380223&quot;,   &quot;private_key_id&quot;: &quot;d0a02250941385dcac0ed37878404bf2fe7cbc1c&quot;,   &quot;private_key&quot;: &quot;-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCt7F2U47OwuOSK\nt7vm0M5vfe2LlXbIzLsfOG4h73MVTrpG1AKLl4ep/Fh2sjpuoJUB27D3Y9/xMHGM\nqpZsbrX/fJ4B8lKeq+LolHBsvMAatj5Vs90USZNW4dTgavdoguDUltvdP2293W1s\ncCg7ada6jtZ5VH3f+7URaCv19KGqCTK/FjoUtS7jyKZ3a/OZjM8RBBqI9sG9fQ18\nhixmoNjbcpDMNJ3hO7aR7y0nUqv27vhve8CYHfI9gwzrKfip0iNcNsbwvF6Ooocj\nF5KuDUe7jwvXACLXhMPjSNSAtWrlaezTZ5JVgfsyQq5CnjFY+brV44gLVxqBYE4u\nY4gvWsElAgMBAAECggEANFSlR7JHk8neAhsMb4OuSX+jZNdg+UQYnWk2QgGxJ90b\nUUpjRasfR7dEytoPmM+6Zee7VIR5kjGYSNHfFtss6aWOSVmnIFTpnj9joGQejSr+\nkHzg7UTCD2c9zRSCQrD2gyCtIOH/3Bvu26zXfiD3WgS2ZaVVhnpO3eDxMT0dE3LY\nCnHBQbyln/qJ8XIRzcy+pqGfnxNz9uURRG5GOHM34tK4Sh1SSR2I3GI+6aryd56m\n6bMMjX5HUgH04YFmNCfrU2OXRCGiigkGBoVDkbIS7QnG5M2quPJZyEGtSazI+LFA\nPLnj8IitTlvHxg9dkDXOUmXsU/CtTr/YX3H5Z9vnFQKBgQDYxbYwKPNaTyj5RAsy\nB2yW8QFHyK7cXY13vXWbe9a4OHk4oyHyuul+iSriBmB111VLhLNf4VlIPq+UKYdi\nq/4q2K4jFfQaRsgPvySi0RtsTKJzRJIQnM4B5c1g8phosbXbJaxopaXlPbRTImZN\nsKwRPDdLjP7pi+Dm0hI9+MVEmwKBgQDNZZyySIfYph80JylOGBI35kMBRVzMEUm+\n4ZCdtVkpyeZ+EjqcNtmgKsrR3Hc9h26XyknLzHobyE8yCQWN9hAcqnFul2en7MZH\nJ1s5M4DJDHuFJ+BIl3jjHQYEu5b4Sko2Ii59Z6tnYWZAaP7wvHklimb94ZT4vVjH\njnN5eKkNPwKBgQDOMqOvBAUYLpyHH5aWrEE7A114bwkGTWc4M1wf3pjM+8szeNne\nDrX0y32jKvWuonpcL4qA9db7xcU2ZpqF3Z0UHLDoZwWfyRyc/fFXfxla1zrf8qYO\nb1n2rCXExn77d6/JGfj6Qjef7CYPvnUaCahjbKgcka4Zchko90Kq+GyNaQKBgBcF\nCV/N0zPLwnmE3hM7jWcobmAJFxJj6aD0BNI4DesqDqQYhOsXFqLlyN9mVxLVR+bJ\nLCYkH5dXhtCzxCSZ7EpaK+ZaH6rpVXuKBKZPiGJ//KP6yR85ornJefAz2gKvyMty\nX0V8xfALMXuMiO4QIX+8mDhh/OE3z2hmJbj6de/fAoGAE30ZgW7XPHTWUmRvgnsr\n4uro+yRMW03YPsTeE7iHTdSVjfMbHF7e0Qzx/F6MZZXprvtW6+eN48gfeT/9XRb+\n6JB8kIxm3oePrbaO1w46jlr3iu53IFZcIgNKtE1ul4FfFtKx1nzl8VX2ejAAzaTl\n0xqZpRy/WEGSUjSv0wqrSOA=\n-----END PRIVATE KEY-----\n&quot;,   &quot;client_email&quot;: &quot;botatouille@botatouille-380223.iam.gserviceaccount.com&quot;,   &quot;client_id&quot;: &quot;111032516463634451046&quot;,   &quot;auth_uri&quot;: &quot;https://accounts.google.com/o/oauth2/auth&quot;,   &quot;token_uri&quot;: &quot;https://oauth2.googleapis.com/token&quot;,   &quot;auth_provider_x509_cert_url&quot;: &quot;https://www.googleapis.com/oauth2/v1/certs&quot;,   &quot;client_x509_cert_url&quot;: &quot;https://www.googleapis.com/robot/v1/metadata/x509/botatouille%40botatouille-380223.iam.gserviceaccount.com&quot; } " />
+        <env name="GOOGLE_APPLICATION_CREDENTIALS" value="$USER_HOME$/Downloads/botatouille-380223-d0a022509413.json" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c79213c8-9a83-4d90-9e35-d2bd9ed8da75" name="Changes" comment="" />
+      <created>1650422211846</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1650422211846</updated>
+      <workItem from="1650422221696" duration="625000" />
+      <workItem from="1650422861849" duration="1178000" />
+      <workItem from="1677885838710" duration="11539000" />
+      <workItem from="1678425408152" duration="1208000" />
+      <workItem from="1678452889379" duration="17271000" />
+      <workItem from="1681914618007" duration="145000" />
+      <workItem from="1691279080658" duration="257000" />
+      <workItem from="1704767722648" duration="149000" />
+      <workItem from="1704767891082" duration="9000" />
+      <workItem from="1704767926873" duration="12000" />
+      <workItem from="1704768101291" duration="519000" />
+      <workItem from="1704770320158" duration="5074000" />
+      <workItem from="1750293862441" duration="5443000" />
+      <workItem from="1754164592400" duration="7000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>113</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/botatouille$main.coverage" NAME="main Coverage Results" MODIFIED="1750815702454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>
