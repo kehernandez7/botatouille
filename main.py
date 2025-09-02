@@ -47,12 +47,7 @@ async def on_message(message):
 
     # Define your replacements
     updated = None
-    if 'instagram.com' in message.content:
-        if 'stories' in message.content:
-            updated = None
-        else: 
-            updated = replace_domain_text(message.content, 'instagram.com', 'instagramez.com')
-    elif 'www.x.com' in message.content:
+    if 'www.x.com' in message.content:
         await send_tweet(message, replied_message)
         updated = replace_domain_text(message.content, 'x.com', 'vxtwitter.com')
     elif 'https://x.com' in message.content:
