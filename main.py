@@ -6,8 +6,15 @@ import re
 import discord
 from discord import app_commands
 from discord.ext import commands
-
+from sleeper.api import (
+    get_league,
+    get_matchups_for_week,
+    get_rosters,
+    get_users_in_league,
+)
 from keep_alive import keep_alive
+from datetime import datetime, timedelta, timezone
+from collections import defaultdict
 
 bot = commands.Bot(
     command_prefix="/",
@@ -18,6 +25,8 @@ client = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
 bot.author_id = os.getenv("BOT_AUTHOR_ID")
 food_data_api_key = os.getenv("FOOD_DATA_API_KEY")
+LEAGUE_ID = "1257103807985229824"
+SEASON_START_TUESDAY = datetime(2025, 9, 9, tzinfo=timezone.utc)  
 
 
 @bot.event
@@ -100,6 +109,57 @@ async def mockMessage(interaction: discord.Interaction, prompt: str):
     except Exception as ex:
         print(ex)
         await interaction.followup.send('Sorry, I am unable to mock your homie at this time.')
+
+
+@bot.tree.command(name="sleeper", description="Get weekly high score leaders from Sleeper")
+async def sleeper(interaction: discord.Interaction):
+    await interaction.response.defer()
+
+    try:
+        # 1. Figure out current week
+        now = datetime.now(timezone.utc)
+        weeks_passed = (now - SEASON_START_TUESDAY).days // 7 + 1
+        current_week = max(1, weeks_passed)
+
+        # 2. Get users & rosters
+        users = get_users_in_league(league_id=LEAGUE_ID)
+        rosters = get_rosters(league_id=LEAGUE_ID)
+
+        # Map roster_id -> user display name
+        roster_to_user = {}
+        for r in rosters:
+            user_id = r["owner_id"]
+            user_info = next((u for u in users if u["user_id"] == user_id), None)
+            if user_info:
+                roster_to_user[r["roster_id"]] = user_info["display_name"]
+
+        # 3. Count weekly wins
+        weekly_wins = defaultdict(int)
+
+        for week in range(1, current_week + 1):
+            matchups = get_matchups_for_week(league_id=LEAGUE_ID, week=1)
+            if not matchups:
+                continue
+
+            # Find highest points that week
+            top_roster = max(matchups, key=lambda m: m["points"])
+            top_user = roster_to_user.get(top_roster["roster_id"], "Unknown")
+            weekly_wins[top_user] += 1
+
+        # 4. Format leaderboard
+        leaderboard = "\n".join(
+            f"**{user}**: {wins} wins"
+            for user, wins in sorted(weekly_wins.items(), key=lambda x: x[1], reverse=True)
+        )
+
+        if not leaderboard:
+            leaderboard = "No data yet."
+
+        await interaction.followup.send(f"🏆 Weekly High Score Leaders:\n{leaderboard}")
+
+    except Exception as ex:
+        print(ex)
+        await interaction.followup.send("❌ Sorry, I couldn't fetch Sleeper data right now.")
 
 
 def to_mocking_text(text):
