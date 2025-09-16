@@ -23,7 +23,7 @@ bot = commands.Bot(
 )
 client = discord.Client(intents=discord.Intents.all())
 tree = app_commands.CommandTree(client)
-bot.author_id = os.getenv("BOT_AUTHOR_ID")
+bot.author_id = 1081353882367709314
 food_data_api_key = os.getenv("FOOD_DATA_API_KEY")
 LEAGUE_ID = "1257103807985229824"
 SEASON_START_TUESDAY = datetime(2025, 9, 9, tzinfo=timezone.utc)  
@@ -137,7 +137,7 @@ async def sleeper(interaction: discord.Interaction):
         weekly_wins = defaultdict(int)
 
         for week in range(1, current_week + 1):
-            matchups = get_matchups_for_week(league_id=LEAGUE_ID, week=1)
+            matchups = get_matchups_for_week(league_id=LEAGUE_ID, week=week)
             if not matchups:
                 continue
 
