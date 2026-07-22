@@ -61,8 +61,6 @@ async def on_message(message):
         updated = replace_domain_text(message.content, 'x.com', 'vxtwitter.com')
     elif 'https://x.com' in message.content:
         await send_tweet(message, replied_message)
-    elif 'open.spotify.com' in message.content:
-        updated = replace_domain_text(message.content, 'open.spotify.com', 'player.spotify.com')
 
     # If there’s a modified message, handle it
     if updated:
