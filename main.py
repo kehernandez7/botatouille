@@ -1,79 +1,49 @@
+import logging
 import os
-import random
-import re
 
 import discord
 from discord import app_commands
 from discord.ext import commands
 
-from keep_alive import keep_alive
+log = logging.getLogger(__name__)
 
-# Matches x.com links (with or without www) so they can be swapped for vxtwitter embeds
-X_LINK_PATTERN = re.compile(r'https?://(?:www\.)?x\.com/', re.IGNORECASE)
-VXTWITTER_PREFIX = 'https://vxtwitter.com/'
-
-MUGSHAWTYS_REACTIONS = (
-    '<:buss:1387240721156669481>',
-    '<:jail:1387240745433432155>',
-    '<:kill:1387246285744242820>',
-)
-MOCKING_EMOJI = '<:mockinbob:1387238863570997388>'
-
-intents = discord.Intents.default()
-intents.message_content = True
-bot = commands.Bot(command_prefix='/', case_insensitive=True, intents=intents)
+EXTENSIONS = ('cogs.admin', 'cogs.fun', 'cogs.links')
+ERROR_MESSAGE = 'Something went wrong. Try again in a bit.'
 
 
-@bot.event
-async def on_ready():
-    print(f"I'm in as {bot.user}")
-    await bot.tree.sync()
+class Botatouille(commands.Bot):
+    def __init__(self):
+        intents = discord.Intents.default()
+        intents.message_content = True
+        super().__init__(command_prefix='!', case_insensitive=True, intents=intents)
+        self.tree.error(self.on_app_command_error)
 
+    async def setup_hook(self):
+        for extension in EXTENSIONS:
+            await self.load_extension(extension)
 
-@bot.event
-async def on_message(message: discord.Message):
-    if message.author == bot.user or not X_LINK_PATTERN.search(message.content):
-        return
-    await repost_with_vxtwitter(message)
+    async def on_ready(self):
+        log.info('Logged in as %s (ID: %s)', self.user, self.user.id)
 
+    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+        # Ignore typos and non-owners poking at admin commands
+        if isinstance(error, (commands.CommandNotFound, commands.NotOwner)):
+            return
+        if isinstance(error, commands.UserInputError):
+            await ctx.send(str(error))
+            return
+        log.error('Error in command %s', ctx.command, exc_info=error)
+        await ctx.send(ERROR_MESSAGE)
 
-async def repost_with_vxtwitter(message: discord.Message):
-    """Delete the original message and repost it with x.com links rewritten to vxtwitter.com."""
-    replied_message = message.reference.resolved if message.reference else None
-    content = X_LINK_PATTERN.sub(VXTWITTER_PREFIX, message.content)
-    tagged_message = f'{message.author.mention} {content}'
-
-    await message.delete()
-
-    if isinstance(replied_message, discord.Message):
-        sent_message = await replied_message.reply(tagged_message)
-    else:
-        sent_message = await message.channel.send(tagged_message)
-
-    if '/mugshawtys/' in message.content:
-        for reaction in MUGSHAWTYS_REACTIONS:
-            await sent_message.add_reaction(reaction)
-
-
-@bot.tree.command(name='mock', description='This command will mock a homie.')
-@app_commands.describe(prompt='name')
-async def mock(interaction: discord.Interaction, prompt: str):
-    await interaction.response.send_message(f'{to_mocking_text(prompt)} {MOCKING_EMOJI}')
-
-
-def to_mocking_text(text: str) -> str:
-    """Alternate letter casing (starting randomly), leaving non-letters unchanged."""
-    use_upper = random.choice([True, False])
-    chars = []
-    for char in text:
-        if char.isalpha():
-            chars.append(char.upper() if use_upper else char.lower())
-            use_upper = not use_upper
+    async def on_app_command_error(
+        self, interaction: discord.Interaction, error: app_commands.AppCommandError
+    ):
+        log.error('Error in app command %s', interaction.command, exc_info=error)
+        if interaction.response.is_done():
+            await interaction.followup.send(ERROR_MESSAGE, ephemeral=True)
         else:
-            chars.append(char)
-    return ''.join(chars)
+            await interaction.response.send_message(ERROR_MESSAGE, ephemeral=True)
 
 
 if __name__ == '__main__':
-    keep_alive()
-    bot.run(os.environ['DISCORD_BOT_SECRET'])
+    Botatouille().run(os.environ['DISCORD_BOT_SECRET'], root_logger=True)
