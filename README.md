@@ -4,8 +4,19 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
 
 ## Features
 
-- **Better X embeds:** When someone posts an `x.com` link, the bot deletes the message and reposts it, tagging the author, with the link changed to `vxtwitter.com` so it embeds properly. If the original message was a reply, the repost is a reply too.
+- **Link fixing:** When someone posts a link whose preview doesn't work well in Discord, the bot reposts the message with a fixed link and deletes the original. The repost shows the author's own name and avatar, and keeps any attachments.
+
+  | Site | Fixed with |
+  | --- | --- |
+  | X / Twitter | `vxtwitter.com` |
+  | TikTok | `tnktok.com` |
+  | Reddit | `vxreddit.com` |
+
+  To add a site or switch fixers, edit `LINK_FIXERS` in `cogs/links.py`.
+
+  If the bot doesn't have the **Manage Webhooks** permission in a channel, it reposts as itself instead and tags the author.
 - **`/mock <prompt>`:** Replies with the text in alternating case, lIkE tHiS.
+- **Mock this message:** Right-click (or long-press) any message, then **Apps → Mock this message**.
 
 ## Requirements
 
@@ -17,7 +28,7 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
 1. **Create the bot in Discord**
    1. Go to the [Discord Developer Portal](https://discord.com/developers/applications) and create an application.
    2. Under **Bot**, click **Reset Token** and copy the token, then turn on **Message Content Intent**.
-   3. Under **OAuth2 → URL Generator**, select the `bot` and `applications.commands` scopes. Give it the **Send Messages**, **Manage Messages** (to delete the original message), **Add Reactions** and **Read Message History** permissions, then open the generated URL to invite the bot to your server.
+   3. Under **OAuth2 → URL Generator**, select the `bot` and `applications.commands` scopes. Give it the **Send Messages**, **Manage Messages** (to delete the original message), **Manage Webhooks** (to repost as the author), **Attach Files**, **Add Reactions** and **Read Message History** permissions, then open the generated URL to invite the bot to your server.
 
 2. **Install dependencies**
 
@@ -71,8 +82,8 @@ ruff format .
 | File | Purpose |
 | --- | --- |
 | `main.py` | Creates the bot, loads the cogs, logging and error handling |
-| `cogs/links.py` | Reposts `x.com` links as `vxtwitter.com` |
-| `cogs/fun.py` | `/mock` |
+| `cogs/links.py` | Link fixing |
+| `cogs/fun.py` | `/mock` and the **Mock this message** menu option |
 | `cogs/admin.py` | Owner-only `!sync` |
 | `requirements.txt` | Runtime dependencies |
 | `requirements-dev.txt` | Runtime dependencies plus Ruff |
