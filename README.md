@@ -9,7 +9,6 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
   | Site | Fixed with |
   | --- | --- |
   | X / Twitter | `vxtwitter.com` |
-  | Instagram (not stories) | `instagramez.com` |
   | TikTok | `tnktok.com` |
   | Reddit | `vxreddit.com` |
 

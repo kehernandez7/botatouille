@@ -15,11 +15,6 @@ LINK_FIXERS = (
         re.compile(r'https?://(?:www\.|mobile\.)?(?:x|twitter)\.com/', re.I),
         'https://vxtwitter.com/',
     ),
-    # Stories don't embed, so leave them alone
-    (
-        re.compile(r'https?://(?:www\.)?instagram\.com/(?!stories/)', re.I),
-        'https://instagramez.com/',
-    ),
     # Keep the vm./vt. subdomain on short links; the fixer mirrors it
     (re.compile(r'https?://(www\.|vm\.|vt\.)?tiktok\.com/', re.I), r'https://\1tnktok.com/'),
     (re.compile(r'https?://(?:www\.|old\.|new\.)?reddit\.com/', re.I), 'https://vxreddit.com/'),
