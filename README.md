@@ -15,6 +15,7 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
   To add a site or switch fixers, edit `LINK_FIXERS` in `cogs/links.py`.
 
   If the bot doesn't have the **Manage Webhooks** permission in a channel, it reposts as itself instead and tags the author.
+- **Links to other music apps:** When someone posts a song or album from Spotify, Apple Music, YouTube Music, Tidal or Deezer, the bot replies with buttons to open it in other apps, using [song.link](https://song.link). Without an Odesli API key (see [Setup](#setup)) it shows one **Open in other apps** button for the song.link page. With a key it shows a button for each app, plus the song title and artist.
 - **`/mock <prompt>`:** Replies with the text in alternating case, lIkE tHiS.
 - **Mock this message:** Right-click (or long-press) any message, then **Apps → Mock this message**.
 
@@ -45,6 +46,12 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
    ```
 
    Use the token from the **Bot** page. The Application ID, Public Key and Client Secret won't work.
+
+   Optionally, set this too:
+
+   | Variable | What it's for |
+   | --- | --- |
+   | `ODESLI_API_KEY` | Shows a button for each music app instead of one song.link button. Odesli no longer allows keyless access to its API; you can ask for a key through [Odesli's help pages](https://odesli.co/help). |
 
 ## Running
 
@@ -82,7 +89,7 @@ ruff format .
 | File | Purpose |
 | --- | --- |
 | `main.py` | Creates the bot, loads the cogs, logging and error handling |
-| `cogs/links.py` | Link fixing |
+| `cogs/links.py` | Link fixing and links to other music apps |
 | `cogs/fun.py` | `/mock` and the **Mock this message** menu option |
 | `cogs/admin.py` | Owner-only `!sync` |
 | `requirements.txt` | Runtime dependencies |
