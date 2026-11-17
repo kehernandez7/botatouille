@@ -7,7 +7,7 @@ from discord.ext import commands
 
 log = logging.getLogger(__name__)
 
-EXTENSIONS = ('cogs.admin', 'cogs.fun', 'cogs.links')
+EXTENSIONS = ('cogs.admin', 'cogs.fun', 'cogs.links', 'cogs.wrapped')
 ERROR_MESSAGE = 'Something went wrong. Try again in a bit.'
 
 
@@ -15,6 +15,9 @@ class Botatouille(commands.Bot):
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
+        # Server Wrapped reads members' "Listening to Spotify" status
+        intents.presences = True
+        intents.members = True
         super().__init__(command_prefix='!', case_insensitive=True, intents=intents)
         self.tree.error(self.on_app_command_error)
 
@@ -38,11 +41,16 @@ class Botatouille(commands.Bot):
     async def on_app_command_error(
         self, interaction: discord.Interaction, error: app_commands.AppCommandError
     ):
-        log.error('Error in app command %s', interaction.command, exc_info=error)
-        if interaction.response.is_done():
-            await interaction.followup.send(ERROR_MESSAGE, ephemeral=True)
+        # Missing permissions and the like: tell the user why instead of logging an error
+        if isinstance(error, app_commands.CheckFailure):
+            message = str(error)
         else:
-            await interaction.response.send_message(ERROR_MESSAGE, ephemeral=True)
+            log.error('Error in app command %s', interaction.command, exc_info=error)
+            message = ERROR_MESSAGE
+        if interaction.response.is_done():
+            await interaction.followup.send(message, ephemeral=True)
+        else:
+            await interaction.response.send_message(message, ephemeral=True)
 
 
 if __name__ == '__main__':
