@@ -15,7 +15,7 @@ A small Discord bot built with [discord.py](https://discordpy.readthedocs.io/).
   To add a site or switch fixers, edit `LINK_FIXERS` in `cogs/links.py`.
 
   If the bot doesn't have the **Manage Webhooks** permission in a channel, it reposts as itself instead and tags the author.
-- **Server Wrapped:** A recap of what the server listens to on Spotify: top songs, top artists, biggest listeners and the most-replayed song. It's **off until someone with Manage Server turns it on**, and members can opt out at any time. See [Server Wrapped](#server-wrapped).
+- **Server Wrapped:** A recap of what the server listens to on Spotify: top songs, top artists, biggest listeners and the most-replayed song. Members can also see their own recap. It's **off until someone with Manage Server turns it on**, and members can opt out at any time. See [Server Wrapped](#server-wrapped).
 - **`/mock <prompt>`:** Replies with the text in alternating case, lIkE tHiS.
 - **Mock this message:** Right-click (or long-press) any message, then **Apps → Mock this message**.
 
@@ -30,6 +30,7 @@ It reads the **Listening to Spotify** status Discord already shows, so it only s
 | `/wrapped start` | Manage Server | Starts logging and announces it in the channel |
 | `/wrapped stop [delete_data]` | Manage Server | Stops logging. Keeps the data for recaps unless `delete_data` is on |
 | `/wrapped recap [period]` | Anyone | Posts the recap for this month, this year or all time |
+| `/wrapped user [member] [period]` | Anyone | Posts one member's recap (yours by default): top songs, artists and album, and where they rank in the server |
 | `/wrapped optout` | Anyone | Stops logging you in every server and deletes everything logged about you |
 | `/wrapped optin` | Anyone | Undoes an opt-out |
 | `/wrapped status` | Anyone | Privately shows whether the server is logging and how many of your listens are stored |

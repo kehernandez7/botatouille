@@ -59,7 +59,8 @@ START_ANNOUNCEMENT = (
     "🎧 **Server Wrapped is on.** From now on I'll log what members of this server listen "
     'to on Spotify (the song, artist, album and how long you listened), using the '
     '"Listening to Spotify" status Discord already shows on your profile. '
-    'Anyone can see the recap with `/wrapped recap`.\n\n'
+    "Anyone can see the server recap with `/wrapped recap`, or one member's with "
+    '`/wrapped user`.\n\n'
     "Don't want to be included? Run `/wrapped optout` and I'll stop logging you and delete "
     'everything logged about you so far.'
 )
@@ -229,6 +230,58 @@ class WrappedStore:
             ).fetchone(),
         }
 
+    def user_recap(self, guild_id: int, user_id: int, since: int) -> dict | None:
+        """Return the numbers for one member's recap, or None if nothing was logged for them
+        in the period."""
+        server = 'WHERE guild_id = ? AND listened_at >= ?'
+        where = f'{server} AND user_id = ?'
+        args = (guild_id, since, user_id)
+        listens, seconds, songs, artists = self.db.execute(
+            f'SELECT COUNT(*), SUM(seconds), COUNT(DISTINCT track_id), COUNT(DISTINCT main_artist)'
+            f' FROM listens {where}',
+            args,
+        ).fetchone()
+        if not listens:
+            return None
+        # How many listeners in the server listened for longer, and how many there are
+        ahead, listeners = self.db.execute(
+            f'SELECT SUM(total > ?), COUNT(*) FROM'
+            f' (SELECT SUM(seconds) AS total FROM listens {server} GROUP BY user_id)',
+            (seconds, guild_id, since),
+        ).fetchone()
+        return {
+            'listens': listens,
+            'seconds': seconds,
+            'songs': songs,
+            'artist_count': artists,
+            'rank': ahead + 1,
+            'listeners': listeners,
+            'tracks': self.db.execute(
+                f'SELECT title, artists, COUNT(*) AS plays, SUM(seconds) AS total'
+                f' FROM listens {where} GROUP BY track_id'
+                f' ORDER BY plays DESC, total DESC LIMIT ?',
+                (*args, TOP_COUNT),
+            ).fetchall(),
+            'artists': self.db.execute(
+                f'SELECT main_artist, COUNT(*) AS plays, SUM(seconds) AS total'
+                f' FROM listens {where} GROUP BY main_artist'
+                f' ORDER BY plays DESC, total DESC LIMIT ?',
+                (*args, TOP_COUNT),
+            ).fetchall(),
+            'album': self.db.execute(
+                f"SELECT album, main_artist, COUNT(*) AS plays FROM listens {where} AND album != ''"
+                f' GROUP BY album, main_artist ORDER BY plays DESC LIMIT 1',
+                args,
+            ).fetchone(),
+            # Artists this member listened to that nobody else in the server did
+            'only_you': self.db.execute(
+                f'SELECT COUNT(*) FROM (SELECT main_artist FROM listens {server}'
+                f' GROUP BY main_artist'
+                f' HAVING COUNT(DISTINCT user_id) = 1 AND MIN(user_id) = ?)',
+                (guild_id, since, user_id),
+            ).fetchone()[0],
+        }
+
 
 def recap_embed(guild: discord.Guild, period: str, started_at: int | None, data: dict):
     embed = discord.Embed(
@@ -278,6 +331,56 @@ def recap_embed(guild: discord.Guild, period: str, started_at: int | None, data:
         embed.set_footer(text='Logging since')
         embed.timestamp = datetime.fromtimestamp(started_at, tz=timezone.utc)
     return embed
+
+
+def user_recap_embed(member: discord.Member, period: str, data: dict):
+    embed = discord.Embed(
+        title=f"🎧 {member.display_name}'s Wrapped · {PERIODS[period]}",
+        description=(
+            f'**{plural(data["listens"], "listen")}** · **{format_duration(data["seconds"])}** '
+            f'of music · **{plural(data["songs"], "song")}** by '
+            f'**{plural(data["artist_count"], "artist")}**'
+        ),
+        color=discord.Color.from_rgb(30, 215, 96),
+    )
+    embed.set_thumbnail(url=member.display_avatar.url)
+
+    embed.add_field(
+        name='Top songs',
+        value='\n'.join(
+            f'{i}. **{clean(title)}** · {clean(artists)} ({plural(plays, "play")})'
+            for i, (title, artists, plays, _) in enumerate(data['tracks'], 1)
+        ),
+        inline=False,
+    )
+    embed.add_field(
+        name='Top artists',
+        value='\n'.join(
+            f'{i}. **{clean(artist)}** ({plural(plays, "play")}, {format_duration(seconds)})'
+            for i, (artist, plays, seconds) in enumerate(data['artists'], 1)
+        ),
+        inline=False,
+    )
+    if data['album']:
+        album, artist, plays = data['album']
+        embed.add_field(
+            name='Top album',
+            value=f'**{clean(album)}** · {clean(artist)} ({plural(plays, "play")})',
+            inline=False,
+        )
+
+    highlights = [f'#{data["rank"]} of {plural(data["listeners"], "listener")} here by time']
+    if data['only_you'] and data['listeners'] > 1:
+        highlights.append(f'{plural(data["only_you"], "artist")} nobody else here listened to')
+    embed.add_field(name='In this server', value='\n'.join(highlights), inline=False)
+    return embed
+
+
+def not_logging_message() -> str:
+    return (
+        "Server Wrapped isn't on here. Someone with Manage Server can turn it on with "
+        '`/wrapped start`.'
+    )
 
 
 @app_commands.guild_only()
@@ -397,10 +500,7 @@ class Wrapped(commands.GroupCog, group_name='wrapped', group_description='Server
             if interaction.guild_id in self.tracked:
                 message = 'Nothing logged for that stretch yet. Check back once people listen.'
             else:
-                message = (
-                    "Server Wrapped isn't on here. Someone with Manage Server can turn it on "
-                    'with `/wrapped start`.'
-                )
+                message = not_logging_message()
             await interaction.response.send_message(message, ephemeral=True)
             return
         embed = recap_embed(
@@ -408,6 +508,58 @@ class Wrapped(commands.GroupCog, group_name='wrapped', group_description='Server
         )
         await interaction.response.send_message(
             embed=embed, allowed_mentions=discord.AllowedMentions.none()
+        )
+
+    @app_commands.command(name='user', description="See what you or another member's been playing")
+    @app_commands.describe(
+        member='Whose recap to show (default: yours)',
+        period='Which stretch of time to recap (default: this month)',
+    )
+    @app_commands.choices(
+        period=[app_commands.Choice(name=name, value=key) for key, name in PERIODS.items()]
+    )
+    async def user(
+        self,
+        interaction: discord.Interaction,
+        # Not `| None`: discord.py can't read that on Python 3.9, and the default already
+        # makes the option optional
+        member: discord.Member = None,
+        period: str = 'month',
+    ):
+        member = member or interaction.user
+        period_key = period if period in PERIODS else 'month'
+        is_self = member.id == interaction.user.id
+        if member.bot:
+            await interaction.response.send_message("Bots don't have a Wrapped.", ephemeral=True)
+            return
+        if is_self and member.id in self.opted_out:
+            await interaction.response.send_message(
+                "You're opted out, so I don't have anything for you. Run `/wrapped optin` to "
+                'be included again.',
+                ephemeral=True,
+            )
+            return
+
+        since = period_start(period_key, discord.utils.utcnow())
+        data = self.store.user_recap(interaction.guild_id, member.id, since)
+        if data is None:
+            if interaction.guild_id not in self.tracked:
+                message = not_logging_message()
+            elif is_self:
+                message = (
+                    "I haven't logged anything for you in that stretch yet. I can only see "
+                    'Spotify when it shows as your status on Discord.'
+                )
+            else:
+                # Don't say whether they opted out
+                message = f'I have nothing logged for {member.mention} in that stretch.'
+            await interaction.response.send_message(
+                message, ephemeral=True, allowed_mentions=discord.AllowedMentions.none()
+            )
+            return
+        await interaction.response.send_message(
+            embed=user_recap_embed(member, period_key, data),
+            allowed_mentions=discord.AllowedMentions.none(),
         )
 
 
